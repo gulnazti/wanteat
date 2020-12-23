@@ -1,16 +1,16 @@
 package org.gulnaz.wanteat.model;
 
-import org.hibernate.Hibernate;
-import org.springframework.data.annotation.AccessType;
-import org.springframework.data.domain.Persistable;
-
 import javax.persistence.*;
+
+import org.hibernate.Hibernate;
+import org.springframework.data.domain.Persistable;
+import org.springframework.util.Assert;
 
 /**
  * @author gulnaz
  */
 @MappedSuperclass
-@AccessType(AccessType.Type.FIELD)
+@Access(AccessType.FIELD)
 public abstract class AbstractBaseEntity implements Persistable<Integer> {
     public static final int START_SEQ = 1000;
 
@@ -32,6 +32,11 @@ public abstract class AbstractBaseEntity implements Persistable<Integer> {
     }
 
     public Integer getId() {
+        return id;
+    }
+
+    public int id() {
+        Assert.notNull(id, "Entity must have id");
         return id;
     }
 
