@@ -1,14 +1,16 @@
 package org.gulnaz.wanteat.model;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author gulnaz
@@ -25,10 +27,12 @@ public class User extends AbstractNamedEntity {
 
     @NotBlank
     @Size(min = 6, max = 100)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password", nullable = false)
     private String password;
 
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Column(name = "registered", nullable = false)
     private Date registered;
 

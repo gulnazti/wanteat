@@ -1,10 +1,12 @@
 package org.gulnaz.wanteat.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import java.util.List;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.BatchSize;
 
 /**
  * @author gulnaz
@@ -18,7 +20,17 @@ public class Restaurant extends AbstractNamedEntity {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
+    @OrderBy(value = "name")
+    @BatchSize(size = 200)
+    @JsonManagedReference
+    private List<Dish> menu;
+
     public Restaurant() {
+    }
+
+    public Restaurant(String name, String address) {
+        this(null, name, address);
     }
 
     public Restaurant(Integer id, String name, String address) {
@@ -32,5 +44,13 @@ public class Restaurant extends AbstractNamedEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Dish> getMenu() {
+        return menu;
+    }
+
+    public void setMenu(List<Dish> menu) {
+        this.menu = menu;
     }
 }

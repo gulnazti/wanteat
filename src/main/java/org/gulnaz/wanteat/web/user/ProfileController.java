@@ -4,7 +4,6 @@ import java.net.URI;
 
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +21,15 @@ import static org.gulnaz.wanteat.web.SecurityUtil.authUserId;
 public class ProfileController {
     static final String REST_URL = "/profile";
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public ProfileController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping
     public User get() {
-        return userRepository.get(authUserId());
+        return userRepository.findById(authUserId()).orElse(null);
     }
 
     @DeleteMapping

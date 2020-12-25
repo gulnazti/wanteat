@@ -1,37 +1,28 @@
 package org.gulnaz.wanteat.repository;
 
-import java.util.List;
-
 import org.gulnaz.wanteat.model.User;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author gulnaz
  */
 @Repository
-public class UserRepository {
-    private static final Sort SORT_BY_NAME_EMAIL = Sort.by("name", "email");
+@Transactional(readOnly = true)
+public interface UserRepository extends JpaRepository<User, Integer> {
+    public static final Sort SORT_BY_NAME_EMAIL = Sort.by("name", "email");
 
-    private final CrudUserRepository repository;
+    @Override
+    @Transactional
+    User save(User user);
 
-    public UserRepository(CrudUserRepository repository) {
-        this.repository = repository;
-    }
-
-    public User save(User user) {
-        return repository.save(user);
-    }
-
-    public User get(int id) {
-        return repository.findById(id).orElse(null);
-    }
-
-    public boolean delete(int id) {
-        return repository.delete(id) != 0;
-    }
-
-    public List<User> getAll() {
-        return repository.findAll(SORT_BY_NAME_EMAIL);
-    }
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.id=:id")
+    int delete(@Param("id") int id);
 }

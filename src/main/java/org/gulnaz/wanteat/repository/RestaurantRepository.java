@@ -1,38 +1,38 @@
 package org.gulnaz.wanteat.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.gulnaz.wanteat.model.Restaurant;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author gulnaz
  */
 @Repository
-public class RestaurantRepository {
-    private static final Sort SORT_BY_NAME_ADDRESS = Sort.by("name", "address");
+@Transactional(readOnly = true)
+public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
 
-    private final CrudRestaurantRepository repository;
+    @Override
+    @Transactional
+    Restaurant save(Restaurant restaurant);
 
-    public RestaurantRepository(CrudRestaurantRepository repository) {
-        this.repository = repository;
-    }
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Restaurant r WHERE r.id=:id")
+    int delete(@Param("id") int id);
 
-    public List<Restaurant> getAll() {
-        return repository.findAll(SORT_BY_NAME_ADDRESS);
-    }
+    @EntityGraph(attributePaths = "menu", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT r FROM Restaurant r LEFT JOIN r.menu m ON r.id = m.restaurant.id AND m.created = ?1")
+    List<Restaurant> getAllWithMenu(LocalDate date);
 
-    public Restaurant get(int id) {
-        return repository.findById(id)
-            .orElse(null);
-    }
-
-    public Restaurant save(Restaurant restaurant) {
-        return repository.save(restaurant);
-    }
-
-    public boolean delete(int id) {
-        return repository.delete(id) != 0;
-    }
+    @EntityGraph(attributePaths = "menu", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT r FROM Restaurant r LEFT JOIN r.menu m ON r.id = m.restaurant.id AND m.created = ?2 WHERE r.id = ?1")
+    Restaurant getWithMenu(int id, LocalDate date);
 }
