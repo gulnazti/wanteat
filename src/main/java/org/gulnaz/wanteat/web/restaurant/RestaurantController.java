@@ -6,12 +6,17 @@ import java.util.List;
 
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.model.Restaurant;
+import org.gulnaz.wanteat.model.Vote;
 import org.gulnaz.wanteat.repository.DishRepository;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
+import org.gulnaz.wanteat.repository.VoteRepository;
+import org.gulnaz.wanteat.to.RestaurantTo;
+import org.gulnaz.wanteat.util.RestaurantUtil;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -32,10 +37,14 @@ public class RestaurantController {
 
     private final DishRepository dishRepository;
 
+    private final VoteRepository voteRepository;
+
     public RestaurantController(RestaurantRepository restaurantRepository,
-                                     DishRepository dishRepository) {
+                                DishRepository dishRepository,
+                                VoteRepository voteRepository) {
         this.restaurantRepository = restaurantRepository;
         this.dishRepository = dishRepository;
+        this.voteRepository = voteRepository;
     }
 
     @GetMapping()
@@ -44,8 +53,11 @@ public class RestaurantController {
     }
 
     @GetMapping("/with-menu")
-    public List<Restaurant> getAllWithMenu() {
-        return restaurantRepository.getAllWithMenu(LocalDate.now());
+    @Transactional
+    public List<RestaurantTo> getAllWithMenu() {
+        List<Restaurant> restaurants = restaurantRepository.getAllWithMenu(LocalDate.now());
+        List<Vote> allTodayVotes = voteRepository.getAllVotesForToday(LocalDate.now());
+        return RestaurantUtil.getTos(restaurants, allTodayVotes);
     }
 
     @GetMapping("/{id}")
@@ -85,10 +97,11 @@ public class RestaurantController {
 
     @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Dish> addDish(@RequestBody Dish dish, @PathVariable("restaurantId") int restaurantId) {
+    @Transactional
+    public ResponseEntity<Dish> addDish(@RequestBody Dish dish, @PathVariable int id) {
         checkNew(dish);
         Dish created = dishRepository.save(dish);
-        created.setRestaurant(restaurantRepository.getOne(restaurantId));
+        created.setRestaurant(restaurantRepository.getOne(id));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/dishes/{id}")
             .buildAndExpand(created.getId())
