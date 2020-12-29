@@ -74,7 +74,7 @@ public class VoteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelVote(@AuthenticationPrincipal AuthorizedUser authUser) {
         if (LocalTime.now().isBefore(RESTRICTION_TIME)) {
-            voteRepository.deleteByUserIdAndDate(authUser.getId(), LocalDate.now());
+            voteRepository.delete(authUser.getId(), LocalDate.now());
         } else {
             throw new VoteException("You cannot cancel your vote");
         }

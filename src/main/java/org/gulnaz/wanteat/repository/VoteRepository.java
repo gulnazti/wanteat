@@ -6,6 +6,7 @@ import java.util.List;
 import org.gulnaz.wanteat.model.Vote;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +24,12 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     Vote getByUserIdAndDate(int id, LocalDate date);
 
-    void deleteByUserIdAndDate(int id, LocalDate date);
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Vote v WHERE v.user.id=?1 AND v.date=?2")
+    void delete(int id, LocalDate date);
 
-    @Query("Select v FROM Vote v JOIN v.restaurant JOIN v.user WHERE v.date=?1")
+    @Query("SELECT v FROM Vote v JOIN v.restaurant JOIN v.user WHERE v.date=?1")
     List<Vote> getAllVotesForToday(LocalDate date);
 
     @EntityGraph(attributePaths = "restaurant", type = EntityGraph.EntityGraphType.LOAD)
