@@ -1,0 +1,14 @@
+package org.gulnaz.wanteat.util.exception;
+
+/**
+ * @author gulnaz
+ */
+public class ErrorInfo {
+    private final String url;
+    private final String[] detail;
+
+    public ErrorInfo(CharSequence url, String[] detail) {
+        this.url = url.toString();
+        this.detail = detail;
+    }
+}

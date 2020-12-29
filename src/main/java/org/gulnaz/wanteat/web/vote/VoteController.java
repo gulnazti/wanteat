@@ -11,6 +11,7 @@ import org.gulnaz.wanteat.model.Vote;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.UserRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
+import org.gulnaz.wanteat.util.exception.VoteException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class VoteController {
         boolean allowed = LocalTime.now().isBefore(RESTRICTION_TIME);
 
         if (vote != null && !allowed) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(vote);
+            throw new VoteException("Voting time is expired");
         }
 
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
@@ -67,5 +68,15 @@ public class VoteController {
     @GetMapping("/votes-history")
     public List<Vote> getVotesHistory(@AuthenticationPrincipal AuthorizedUser authUser) {
         return voteRepository.getAllVotesByUserId(authUser.getId());
+    }
+
+    @DeleteMapping("/{id}/vote")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancelVote(@AuthenticationPrincipal AuthorizedUser authUser) {
+        if (LocalTime.now().isBefore(RESTRICTION_TIME)) {
+            voteRepository.deleteByUserIdAndDate(authUser.getId(), LocalDate.now());
+        } else {
+            throw new VoteException("You cannot cancel your vote");
+        }
     }
 }
