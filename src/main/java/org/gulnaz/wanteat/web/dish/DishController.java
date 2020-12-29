@@ -8,6 +8,7 @@ import org.gulnaz.wanteat.repository.DishRepository;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,7 +40,7 @@ public class DishController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<Dish> getAll() {
-        return dishRepository.findAll();
+        return dishRepository.findAll(Sort.by("created", "id").descending());
     }
 
     @GetMapping("/{id}")

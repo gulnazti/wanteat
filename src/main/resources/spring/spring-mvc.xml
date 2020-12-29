@@ -11,12 +11,12 @@
 
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled"/>
 
+    <bean class="org.gulnaz.wanteat.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>
+
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="objectMapper">
-                    <bean class="org.gulnaz.wanteat.web.json.JacksonObjectMapper"/>
-                </property>
+                <property name="objectMapper" ref="objectMapper"/>
             </bean>
         </mvc:message-converters>
         <mvc:argument-resolvers>
