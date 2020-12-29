@@ -9,5 +9,8 @@
 
     <context:component-scan base-package="org.gulnaz.**.repository"/>
     <jpa:repositories base-package="org.gulnaz.**.repository"/>
+    <context:component-scan base-package="org.gulnaz.**.service"/>
+
+    <import resource="spring-security.xml"/>
 
 </beans>

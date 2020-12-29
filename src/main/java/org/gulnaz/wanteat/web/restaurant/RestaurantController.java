@@ -3,6 +3,7 @@ package org.gulnaz.wanteat.web.restaurant;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
+import javax.validation.Valid;
 
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.model.Restaurant;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -72,7 +74,8 @@ public class RestaurantController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         checkNew(restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -84,24 +87,29 @@ public class RestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Restaurant restaurant, @PathVariable int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         assureIdConsistent(restaurant, id);
+        checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);
         restaurantRepository.save(restaurant);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable int id) {
         checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
     }
 
     @PostMapping(value = "/{id}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<Dish> addDish(@RequestBody Dish dish, @PathVariable int id) {
+    public ResponseEntity<Dish> addDish(@Valid @RequestBody Dish dish, @PathVariable int id) {
         checkNew(dish);
+        dish.setRestaurant(restaurantRepository.getOne(id));
         Dish created = dishRepository.save(dish);
-        created.setRestaurant(restaurantRepository.getOne(id));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path("/dishes/{id}")
             .buildAndExpand(created.getId())

@@ -4,16 +4,17 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.Restaurant;
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.model.Vote;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.UserRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
-import org.gulnaz.wanteat.web.SecurityUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +42,9 @@ public class VoteController {
 
     @PostMapping("/{id}/vote")
     @Transactional
-    public ResponseEntity<Vote> vote(@PathVariable("id") int restaurantId) {
-        int userId = SecurityUtil.authUserId();
+    public ResponseEntity<Vote> vote(@PathVariable("id") int restaurantId,
+                                     @AuthenticationPrincipal AuthorizedUser authUser) {
+        int userId = authUser.getId();
         Vote vote = voteRepository.getByUserIdAndDate(userId, LocalDate.now());
         boolean allowed = LocalTime.now().isBefore(RESTRICTION_TIME);
 
@@ -51,18 +53,19 @@ public class VoteController {
         }
 
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
-        User user = userRepository.getOne(userId);
-        Vote voteToSave = vote == null
-                          ? new Vote(restaurant, user)
-                          : new Vote(vote.getId(), restaurant, user);
-        Vote saved = voteRepository.save(voteToSave);
-        return vote == null
-               ? ResponseEntity.status(HttpStatus.CREATED).body(saved)
-               : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        if (vote == null) {
+            User user = userRepository.getOne(userId);
+            Vote saved = voteRepository.save(new Vote(restaurant, user));
+            return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+        } else {
+            vote.setRestaurant(restaurant);
+            voteRepository.save(vote);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
-    @GetMapping("/votes")
-    public List<Vote> getHistory() {
-        return voteRepository.getAllVotesByUserId(SecurityUtil.authUserId());
+    @GetMapping("/votes-history")
+    public List<Vote> getVotesHistory(@AuthenticationPrincipal AuthorizedUser authUser) {
+        return voteRepository.getAllVotesByUserId(authUser.getId());
     }
 }

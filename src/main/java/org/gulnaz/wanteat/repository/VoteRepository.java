@@ -23,8 +23,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
 
     Vote getByUserIdAndDate(int id, LocalDate date);
 
-    int countByRestaurantIdAndDate(int id, LocalDate date);
-
     @Query("Select v FROM Vote v JOIN v.restaurant JOIN v.user WHERE v.date=?1")
     List<Vote> getAllVotesForToday(LocalDate date);
 

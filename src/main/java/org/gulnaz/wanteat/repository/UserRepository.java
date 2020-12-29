@@ -1,7 +1,6 @@
 package org.gulnaz.wanteat.repository;
 
 import org.gulnaz.wanteat.model.User;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
-    public static final Sort SORT_BY_NAME_EMAIL = Sort.by("name", "email");
 
     @Override
     @Transactional
@@ -25,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.id=:id")
     int delete(@Param("id") int id);
+
+    User getByEmail(String email);
 }

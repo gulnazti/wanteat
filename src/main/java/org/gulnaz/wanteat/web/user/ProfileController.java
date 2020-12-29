@@ -1,17 +1,19 @@
 package org.gulnaz.wanteat.web.user;
 
 import java.net.URI;
+import javax.validation.Valid;
 
+import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import static org.gulnaz.wanteat.util.ValidationUtil.assureIdConsistent;
-import static org.gulnaz.wanteat.web.SecurityUtil.authUserId;
 
 /**
  * @author gulnaz
@@ -28,19 +30,19 @@ public class ProfileController {
     }
 
     @GetMapping
-    public User get() {
-        return userRepository.findById(authUserId()).orElse(null);
+    public User get(@AuthenticationPrincipal AuthorizedUser authUser) {
+        return userRepository.findById(authUser.getId()).orElse(null);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete() {
-        userRepository.delete(authUserId());
+    public void delete(@AuthenticationPrincipal AuthorizedUser authUser) {
+        userRepository.delete(authUser.getId());
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<User> register(@Valid @RequestBody User user) {
         User created = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path(REST_URL + "/{id}")
@@ -51,8 +53,8 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@RequestBody User user) {
-        assureIdConsistent(user, authUserId());
+    public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthorizedUser authUser) {
+        assureIdConsistent(user, authUser.getId());
         userRepository.save(user);
     }
 }
