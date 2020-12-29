@@ -4,38 +4,30 @@ import java.beans.ConstructorProperties;
 import java.util.List;
 import java.util.Objects;
 
-import org.gulnaz.wanteat.model.Dish;
-
 /**
  * @author gulnaz
  */
-public class RestaurantTo {
-
-    private final Integer id;
+public class RestaurantTo extends BaseTo {
 
     private final String name;
 
-    private final List<Dish> menu;
+    private final List<DishTo> menu;
 
     private final int todayVotes;
 
     @ConstructorProperties({"id", "name", "menu", "todayVotes"})
-    public RestaurantTo(Integer id, String name, List<Dish> menu, int todayVotes) {
+    public RestaurantTo(Integer id, String name, List<DishTo> menu, int todayVotes) {
         this.id = id;
         this.name = name;
         this.menu = menu;
         this.todayVotes = todayVotes;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public List<Dish> getMenu() {
+    public List<DishTo> getMenu() {
         return menu;
     }
 

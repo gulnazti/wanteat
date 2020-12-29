@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import static org.gulnaz.wanteat.util.ValidationUtil.assureIdConsistent;
@@ -49,6 +50,7 @@ public class DishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
         assureIdConsistent(dish, id);
         Integer restaurantId = dishRepository.getRestaurantIdByDishId(id);
