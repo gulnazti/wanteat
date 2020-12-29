@@ -2,8 +2,8 @@ package org.gulnaz.wanteat.model;
 
 import javax.persistence.*;
 
+import org.gulnaz.wanteat.HasId;
 import org.hibernate.Hibernate;
-import org.springframework.data.domain.Persistable;
 import org.springframework.util.Assert;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.util.Assert;
  */
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public abstract class AbstractBaseEntity implements Persistable<Integer> {
+public abstract class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 1000;
 
     @Id

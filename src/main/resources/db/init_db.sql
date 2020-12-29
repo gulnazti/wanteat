@@ -51,7 +51,7 @@ CREATE TABLE votes
     user_id       INTEGER                 NOT NULL,
     restaurant_id INTEGER                 NOT NULL,
     date          TIMESTAMP DEFAULT current_date NOT NULL,
-    CONSTRAINT votes_idx UNIQUE (user_id, restaurant_id, date),
+    CONSTRAINT votes_idx UNIQUE (user_id, date),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );

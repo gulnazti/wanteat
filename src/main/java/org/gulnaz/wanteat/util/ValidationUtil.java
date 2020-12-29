@@ -1,5 +1,6 @@
 package org.gulnaz.wanteat.util;
 
+import org.gulnaz.wanteat.HasId;
 import org.gulnaz.wanteat.model.AbstractBaseEntity;
 import org.gulnaz.wanteat.util.exception.NotFoundException;
 
@@ -34,7 +35,7 @@ public class ValidationUtil {
         }
     }
 
-    public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
+    public static void assureIdConsistent(HasId entity, int id) {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.id() != id) {

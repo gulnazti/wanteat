@@ -5,7 +5,8 @@ import javax.validation.Valid;
 
 import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.User;
-import org.gulnaz.wanteat.repository.UserRepository;
+import org.gulnaz.wanteat.service.UserService;
+import org.gulnaz.wanteat.to.UserTo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import static org.gulnaz.wanteat.util.UserUtil.createNewFromTo;
 import static org.gulnaz.wanteat.util.ValidationUtil.assureIdConsistent;
 
 /**
@@ -23,27 +25,27 @@ import static org.gulnaz.wanteat.util.ValidationUtil.assureIdConsistent;
 public class ProfileController {
     static final String REST_URL = "/profile";
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public ProfileController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public ProfileController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public User get(@AuthenticationPrincipal AuthorizedUser authUser) {
-        return userRepository.findById(authUser.getId()).orElse(null);
+        return userService.get(authUser.getId());
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@AuthenticationPrincipal AuthorizedUser authUser) {
-        userRepository.delete(authUser.getId());
+        userService.delete(authUser.getId());
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
-        User created = userRepository.save(user);
+    public ResponseEntity<User> register(@Valid @RequestBody UserTo userTo) {
+        User created = userService.create(createNewFromTo(userTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path(REST_URL + "/{id}")
             .buildAndExpand(created.getId())
@@ -53,8 +55,8 @@ public class ProfileController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthorizedUser authUser) {
-        assureIdConsistent(user, authUser.getId());
-        userRepository.save(user);
+    public void update(@Valid @RequestBody UserTo userTo, @AuthenticationPrincipal AuthorizedUser authUser) {
+        assureIdConsistent(userTo, authUser.getId());
+        userService.update(userTo);
     }
 }
