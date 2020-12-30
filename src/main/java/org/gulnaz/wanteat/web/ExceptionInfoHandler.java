@@ -1,7 +1,6 @@
 package org.gulnaz.wanteat.web;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.gulnaz.wanteat.util.ValidationUtil;
@@ -32,10 +31,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
-    private static final List<String> CONSTRAINS = List.of(
-        "users_unique_email_idx",
-        "restaurants_unique_name_address_idx",
-        "dishes_unique_name_created_idx");
+    public static final String DUPLICATE_EMAIL = "User with this email already exists";
+    public static final String DUPLICATE_NAME_ADDRESS = "Restaurant with these name and address already exists";
+    public static final String DUPLICATE_NAME_TODAY = "Dish with this name has been already created today";
+
+    private static final Map<String, String> CONSTRAINS = Map.of(
+        "users_unique_email_idx", DUPLICATE_EMAIL,
+        "restaurants_unique_name_address_idx", DUPLICATE_NAME_ADDRESS,
+        "dishes_unique_name_created_idx", DUPLICATE_NAME_TODAY);
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, NotFoundException e) {
@@ -47,9 +50,11 @@ public class ExceptionInfoHandler {
         String rootMsg = ValidationUtil.getRootCause(e).getMessage();
         if (rootMsg != null) {
             String lowerCaseMsg = rootMsg.toLowerCase();
-            Optional<String> filtered = CONSTRAINS.stream().filter(lowerCaseMsg::contains).findAny();
-            if (filtered.isPresent()) {
-                return logAndGetErrorInfo(req, e, HttpStatus.UNPROCESSABLE_ENTITY, false);
+            for (Map.Entry<String, String> entry : CONSTRAINS.entrySet()) {
+                if (lowerCaseMsg.contains(entry.getKey())) {
+                    return logAndGetErrorInfo(req, e, HttpStatus.UNPROCESSABLE_ENTITY,
+                        false, entry.getValue());
+                }
             }
         }
 

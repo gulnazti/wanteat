@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_ADDRESS;
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_TODAY;
 import static org.gulnaz.wanteat.web.RestaurantDishTestData.DISH_MATCHER;
 import static org.gulnaz.wanteat.web.RestaurantDishTestData.NOT_FOUND;
 import static org.gulnaz.wanteat.web.RestaurantDishTestData.RESTAURANT1_ID;
@@ -175,7 +177,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.writeValue(duplicate))
             .with(userHttpBasic(admin)))
-            .andExpect(status().isUnprocessableEntity());
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(detailMessage(DUPLICATE_NAME_ADDRESS));
     }
 
     @Test
@@ -186,7 +189,8 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.writeValue(invalid))
             .with(userHttpBasic(admin)))
-            .andExpect(status().isUnprocessableEntity());
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(detailMessage(DUPLICATE_NAME_ADDRESS));
     }
 
     @Test
@@ -223,6 +227,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.writeValue(duplicate))
             .with(userHttpBasic(admin)))
-            .andExpect(status().isUnprocessableEntity());
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(detailMessage(DUPLICATE_NAME_TODAY));
     }
 }

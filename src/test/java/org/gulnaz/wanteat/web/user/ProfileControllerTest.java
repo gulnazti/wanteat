@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_EMAIL;
 import static org.gulnaz.wanteat.web.TestUtil.readFromJson;
 import static org.gulnaz.wanteat.web.TestUtil.userHttpBasic;
 import static org.gulnaz.wanteat.web.UserTestData.USER_ID;
@@ -116,7 +117,8 @@ class ProfileControllerTest extends AbstractControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonUtil.writeValue(duplicate)))
             .andDo(print())
-            .andExpect(status().isUnprocessableEntity());
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(detailMessage(DUPLICATE_EMAIL));
     }
 
     @Test
@@ -127,6 +129,7 @@ class ProfileControllerTest extends AbstractControllerTest {
             .with(userHttpBasic(user))
             .content(JsonUtil.writeValue(duplicate)))
             .andDo(print())
-            .andExpect(status().isUnprocessableEntity());
+            .andExpect(status().isUnprocessableEntity())
+            .andExpect(detailMessage(DUPLICATE_EMAIL));
     }
 }

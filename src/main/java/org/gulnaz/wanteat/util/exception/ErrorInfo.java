@@ -5,10 +5,10 @@ package org.gulnaz.wanteat.util.exception;
  */
 public class ErrorInfo {
     private final String url;
-    private final String[] detail;
+    private final String[] details;
 
-    public ErrorInfo(CharSequence url, String[] detail) {
+    public ErrorInfo(CharSequence url, String[] details) {
         this.url = url.toString();
-        this.detail = detail;
+        this.details = details;
     }
 }
