@@ -4,12 +4,9 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-  <http pattern="/resources/**" security="none"/>
-  <http pattern="/webjars/**" security="none"/>
-
-  <http pattern="/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
+  <http pattern="/api/v1/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
     <http-basic/>
-    <intercept-url pattern="/dishes" access="hasRole('ADMIN')"/>
+    <intercept-url pattern="/api/v1/profile/register" access="isAnonymous()"/>
     <intercept-url pattern="/**" access="isAuthenticated()"/>
     <csrf disabled="true"/>
   </http>
