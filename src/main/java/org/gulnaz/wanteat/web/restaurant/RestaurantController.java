@@ -14,6 +14,8 @@ import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.to.RestaurantTo;
 import org.gulnaz.wanteat.util.RestaurantUtil;
 import org.gulnaz.wanteat.web.RootController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,6 +35,8 @@ import static org.gulnaz.wanteat.util.ValidationUtil.checkNotFoundWithId;
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     static final String REST_URL = RootController.REST_URL + "/restaurants";
     static final Sort SORT_BY_NAME_ADDRESS = Sort.by("name", "address");
 
@@ -52,12 +56,14 @@ public class RestaurantController {
 
     @GetMapping()
     public List<Restaurant> getAll() {
+        log.info("getAll restaurants");
         return restaurantRepository.findAll(SORT_BY_NAME_ADDRESS);
     }
 
     @GetMapping("/with-menu")
     @Transactional
     public List<RestaurantTo> getAllWithMenu() {
+        log.info("getAll restaurants with menu");
         List<Restaurant> restaurants = restaurantRepository.getAllWithMenu(LocalDate.now());
         List<Vote> allTodayVotes = voteRepository.getAllVotesForToday(LocalDate.now());
         return RestaurantUtil.getTos(restaurants, allTodayVotes);
@@ -65,11 +71,13 @@ public class RestaurantController {
 
     @GetMapping("/{id}")
     public Restaurant get(@PathVariable int id) {
+        log.info("get restaurant {}", id);
         return checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);
     }
 
     @GetMapping("/{id}/with-menu")
     public Restaurant getWithMenu(@PathVariable int id) {
+        log.info("get restaurant {} with menu", id);
         return checkNotFoundWithId(restaurantRepository.getWithMenu(id, LocalDate.now()), id);
     }
 
@@ -78,6 +86,7 @@ public class RestaurantController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Restaurant> create(@Valid @RequestBody Restaurant restaurant) {
         checkNew(restaurant);
+        log.info("create {}", restaurant);
         Restaurant created = restaurantRepository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
             .path(REST_URL + "/{id}")
@@ -92,6 +101,7 @@ public class RestaurantController {
     @Transactional
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         assureIdConsistent(restaurant, id);
+        log.info("update restaurant {}", id);
         checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);
         restaurantRepository.save(restaurant);
     }
@@ -100,6 +110,7 @@ public class RestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable int id) {
+        log.info("delete restaurant {}", id);
         checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
     }
 
@@ -109,6 +120,7 @@ public class RestaurantController {
     @Transactional
     public ResponseEntity<Dish> addDish(@Valid @RequestBody Dish dish, @PathVariable int id) {
         checkNew(dish);
+        log.info("add dish for restaurant {}", id);
         dish.setRestaurant(restaurantRepository.getOne(id));
         Dish created = dishRepository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

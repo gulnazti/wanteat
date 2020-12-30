@@ -12,6 +12,8 @@ import org.gulnaz.wanteat.repository.UserRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.util.exception.VoteException;
 import org.gulnaz.wanteat.web.RootController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ import static org.gulnaz.wanteat.util.exception.VoteException.VOTING_TIME_EXPIRE
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     static final String REST_URL = RootController.REST_URL + "/restaurants";
 
     private final RestaurantRepository restaurantRepository;
@@ -59,6 +63,7 @@ public class VoteController {
         }
 
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
+        log.info("vote for restaurant {}", restaurantId);
         if (vote == null) {
             User user = userRepository.getOne(userId);
             Vote saved = voteRepository.save(new Vote(restaurant, user));
@@ -72,14 +77,18 @@ public class VoteController {
 
     @GetMapping("/votes-history")
     public List<Vote> getVotesHistory(@AuthenticationPrincipal AuthorizedUser authUser) {
-        return voteRepository.getAllVotesByUserId(authUser.getId());
+        int userId = authUser.getId();
+        log.info("getVotesHistory for user {}", userId);
+        return voteRepository.getAllVotesByUserId(userId);
     }
 
     @DeleteMapping("/{id}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelVote(@AuthenticationPrincipal AuthorizedUser authUser) {
         if (getCurrentTime().isBefore(RESTRICTION_TIME)) {
-            voteRepository.delete(authUser.getId(), LocalDate.now());
+            int userId = authUser.getId();
+            log.info("cancelVote for user {}", userId);
+            voteRepository.delete(userId, LocalDate.now());
         } else {
             throw new VoteException(CANCEL_NOT_ALLOWED);
         }

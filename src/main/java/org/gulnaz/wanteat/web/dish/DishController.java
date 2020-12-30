@@ -26,6 +26,7 @@ import static org.gulnaz.wanteat.util.ValidationUtil.checkNotFoundWithId;
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishController {
     private final Logger log = LoggerFactory.getLogger(getClass());
+
     static final String REST_URL = RootController.REST_URL + "/dishes";
 
     private final DishRepository dishRepository;
@@ -41,11 +42,13 @@ public class DishController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<Dish> getAll() {
+        log.info("getAll dishes");
         return dishRepository.findAll(Sort.by("created", "id").descending());
     }
 
     @GetMapping("/{id}")
     public Dish get(@PathVariable int id) {
+        log.info("get dish {}", id);
         return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
     }
 
@@ -58,6 +61,7 @@ public class DishController {
         Integer restaurantId = dishRepository.getRestaurantIdByDishId(id);
         checkNotFoundWithId(restaurantId, id);
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));
+        log.info("update dish {} for restaurant {}", id, restaurantId);
         dishRepository.save(dish);
     }
 
@@ -65,6 +69,7 @@ public class DishController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('ADMIN')")
     public void delete(@PathVariable int id) {
+        log.info("delete dish {}", id);
         checkNotFoundWithId(dishRepository.delete(id) != 0, id);
     }
 }
