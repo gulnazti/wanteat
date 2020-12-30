@@ -1,7 +1,6 @@
 package org.gulnaz.wanteat.web.vote;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import org.gulnaz.wanteat.AuthorizedUser;
@@ -12,6 +11,7 @@ import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.UserRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.util.exception.VoteException;
+import org.gulnaz.wanteat.web.RootController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +19,18 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import static org.gulnaz.wanteat.util.TimeUtil.RESTRICTION_TIME;
+import static org.gulnaz.wanteat.util.TimeUtil.getCurrentTime;
+import static org.gulnaz.wanteat.util.exception.VoteException.CANCEL_NOT_ALLOWED;
+import static org.gulnaz.wanteat.util.exception.VoteException.VOTING_TIME_EXPIRED;
+
 /**
  * @author gulnaz
  */
 @RestController
 @RequestMapping(value = VoteController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VoteController {
-    static final String REST_URL = "/restaurants";
-    static final LocalTime RESTRICTION_TIME = LocalTime.of(11, 0);
+    static final String REST_URL = RootController.REST_URL + "/restaurants";
 
     private final RestaurantRepository restaurantRepository;
 
@@ -44,13 +48,14 @@ public class VoteController {
     @PostMapping("/{id}/vote")
     @Transactional
     public ResponseEntity<Vote> vote(@PathVariable("id") int restaurantId,
-                                     @AuthenticationPrincipal AuthorizedUser authUser) {
+                                     @AuthenticationPrincipal AuthorizedUser authUser)
+        throws VoteException {
         int userId = authUser.getId();
         Vote vote = voteRepository.getByUserIdAndDate(userId, LocalDate.now());
-        boolean allowed = LocalTime.now().isBefore(RESTRICTION_TIME);
+        boolean allowed = getCurrentTime().isBefore(RESTRICTION_TIME);
 
         if (vote != null && !allowed) {
-            throw new VoteException("Voting time is expired");
+            throw new VoteException(VOTING_TIME_EXPIRED);
         }
 
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
@@ -73,10 +78,10 @@ public class VoteController {
     @DeleteMapping("/{id}/vote")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancelVote(@AuthenticationPrincipal AuthorizedUser authUser) {
-        if (LocalTime.now().isBefore(RESTRICTION_TIME)) {
+        if (getCurrentTime().isBefore(RESTRICTION_TIME)) {
             voteRepository.delete(authUser.getId(), LocalDate.now());
         } else {
-            throw new VoteException("You cannot cancel your vote");
+            throw new VoteException(CANCEL_NOT_ALLOWED);
         }
     }
 }

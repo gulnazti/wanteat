@@ -12,6 +12,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @ApiIgnore
 public class RootController {
 
+    public static final String REST_URL = "/api/v1";
+
     @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
     public String root() {
         return "Welcome to WantEat! Make your choice :)";

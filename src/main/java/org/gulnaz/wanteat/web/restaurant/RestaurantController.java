@@ -13,6 +13,7 @@ import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.to.RestaurantTo;
 import org.gulnaz.wanteat.util.RestaurantUtil;
+import org.gulnaz.wanteat.web.RootController;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +33,7 @@ import static org.gulnaz.wanteat.util.ValidationUtil.checkNotFoundWithId;
 @RestController
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
-    static final String REST_URL = "/restaurants";
+    static final String REST_URL = RootController.REST_URL + "/restaurants";
     static final Sort SORT_BY_NAME_ADDRESS = Sort.by("name", "address");
 
     private final RestaurantRepository restaurantRepository;

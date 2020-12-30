@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.repository.DishRepository;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
+import org.gulnaz.wanteat.web.RootController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -25,7 +26,7 @@ import static org.gulnaz.wanteat.util.ValidationUtil.checkNotFoundWithId;
 @RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class DishController {
     private final Logger log = LoggerFactory.getLogger(getClass());
-    static final String REST_URL = "/dishes";
+    static final String REST_URL = RootController.REST_URL + "/dishes";
 
     private final DishRepository dishRepository;
 

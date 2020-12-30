@@ -7,6 +7,7 @@ import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.service.UserService;
 import org.gulnaz.wanteat.to.UserTo;
+import org.gulnaz.wanteat.web.RootController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import static org.gulnaz.wanteat.util.ValidationUtil.assureIdConsistent;
 @RestController
 @RequestMapping(value = ProfileController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProfileController {
-    static final String REST_URL = "/profile";
+    static final String REST_URL = RootController.REST_URL + "/profile";
 
     private final UserService userService;
 
