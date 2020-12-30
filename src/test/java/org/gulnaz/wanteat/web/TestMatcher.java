@@ -43,7 +43,11 @@ public class TestMatcher<T> {
     }
 
     public ResultMatcher contentJson(T expected) {
-        return result -> assertMatch(TestUtil.readFromJsonMvcResult(result, clazz), expected);
+        return result -> {
+            System.out.println("GET READ");
+            System.out.println(TestUtil.readFromJsonMvcResult(result, clazz));
+            assertMatch(TestUtil.readFromJsonMvcResult(result, clazz), expected);
+        };
     }
 
     @SafeVarargs

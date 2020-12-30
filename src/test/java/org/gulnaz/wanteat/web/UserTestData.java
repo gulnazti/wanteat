@@ -9,6 +9,8 @@ import static org.gulnaz.wanteat.model.AbstractBaseEntity.START_SEQ;
  * @author gulnaz
  */
 public class UserTestData {
+    public static final TestMatcher<User> USER_MATCHER = TestMatcher.usingEqualsComparator(User.class);
+
     public static final int USER_ID = START_SEQ;
     public static final int DEV_ID = START_SEQ + 1;
     public static final int ADMIN_ID = START_SEQ + 2;
