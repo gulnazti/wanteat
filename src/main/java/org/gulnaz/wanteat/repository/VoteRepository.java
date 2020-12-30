@@ -29,10 +29,11 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("DELETE FROM Vote v WHERE v.user.id=?1 AND v.date=?2")
     void delete(int id, LocalDate date);
 
-    @Query("SELECT v FROM Vote v JOIN v.restaurant JOIN v.user WHERE v.date=?1")
+    @EntityGraph(attributePaths = "restaurant", type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT v FROM Vote v WHERE v.date=?1")
     List<Vote> getAllVotesForToday(LocalDate date);
 
     @EntityGraph(attributePaths = "restaurant", type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT v FROM Vote v JOIN v.restaurant WHERE v.user.id=?1 ORDER BY v.date DESC")
+    @Query("SELECT v FROM Vote v WHERE v.user.id=?1 ORDER BY v.date DESC")
     List<Vote> getAllVotesByUserId(int id);
 }
