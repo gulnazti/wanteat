@@ -1,6 +1,7 @@
 package org.gulnaz.wanteat.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.Role;
@@ -60,15 +61,15 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void setRole(int id, Role role) {
+    public void enable(int id, boolean enabled) {
         User user = get(id);
-        user.getRoles().add(role);
+        user.setEnabled(enabled);
     }
 
     @Transactional
-    public void deleteRole(int id, Role role) {
+    public void setRoles(int id, Set<Role> roles) {
         User user = get(id);
-        user.getRoles().remove(role);
+        user.setRoles(roles);
     }
 
     @Override
