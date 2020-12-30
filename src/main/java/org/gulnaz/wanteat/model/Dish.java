@@ -75,4 +75,14 @@ public class Dish extends AbstractNamedEntity {
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
+
+    @Override
+    public String toString() {
+        return "Dish{" +
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", price=" + price +
+               ", created=" + created +
+               '}';
+    }
 }
