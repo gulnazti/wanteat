@@ -20,7 +20,7 @@ import static org.gulnaz.wanteat.RestaurantDishTestData.getUpdatedDish;
 import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
 import static org.gulnaz.wanteat.UserTestData.admin;
 import static org.gulnaz.wanteat.UserTestData.user;
-import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_TODAY;
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_DISH_NAME_TODAY;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -124,6 +124,6 @@ class DishControllerTest extends AbstractControllerTest {
             .content(JsonUtil.writeValue(duplicate))
             .with(userHttpBasic(admin)))
             .andExpect(status().isUnprocessableEntity())
-            .andExpect(detailMessage(DUPLICATE_NAME_TODAY));
+            .andExpect(detailMessage(DUPLICATE_DISH_NAME_TODAY));
     }
 }

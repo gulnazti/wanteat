@@ -30,8 +30,8 @@ import static org.gulnaz.wanteat.TestUtil.readFromJson;
 import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
 import static org.gulnaz.wanteat.UserTestData.admin;
 import static org.gulnaz.wanteat.UserTestData.user;
-import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_ADDRESS;
-import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_TODAY;
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_DISH_NAME_TODAY;
+import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_RESTAURANT_NAME_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -176,7 +176,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .content(JsonUtil.writeValue(duplicate))
             .with(userHttpBasic(admin)))
             .andExpect(status().isUnprocessableEntity())
-            .andExpect(detailMessage(DUPLICATE_NAME_ADDRESS));
+            .andExpect(detailMessage(DUPLICATE_RESTAURANT_NAME_ADDRESS));
     }
 
     @Test
@@ -188,7 +188,7 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .content(JsonUtil.writeValue(invalid))
             .with(userHttpBasic(admin)))
             .andExpect(status().isUnprocessableEntity())
-            .andExpect(detailMessage(DUPLICATE_NAME_ADDRESS));
+            .andExpect(detailMessage(DUPLICATE_RESTAURANT_NAME_ADDRESS));
     }
 
     @Test
@@ -226,6 +226,6 @@ class RestaurantControllerTest extends AbstractControllerTest {
             .content(JsonUtil.writeValue(duplicate))
             .with(userHttpBasic(admin)))
             .andExpect(status().isUnprocessableEntity())
-            .andExpect(detailMessage(DUPLICATE_NAME_TODAY));
+            .andExpect(detailMessage(DUPLICATE_DISH_NAME_TODAY));
     }
 }

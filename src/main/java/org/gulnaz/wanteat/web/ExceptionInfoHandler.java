@@ -32,13 +32,14 @@ public class ExceptionInfoHandler {
     private static final Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
     public static final String DUPLICATE_EMAIL = "User with this email already exists";
-    public static final String DUPLICATE_NAME_ADDRESS = "Restaurant with these name and address already exists";
-    public static final String DUPLICATE_NAME_TODAY = "Dish with this name has been already created today";
+    public static final String DUPLICATE_RESTAURANT_NAME_ADDRESS = "Restaurant with these name and address already exists";
+    public static final String DUPLICATE_DISH_NAME_TODAY = "Dish with this name has been already created today";
 
     private static final Map<String, String> CONSTRAINS = Map.of(
         "users_unique_email_idx", DUPLICATE_EMAIL,
-        "restaurants_unique_name_address_idx", DUPLICATE_NAME_ADDRESS,
-        "dishes_unique_name_created_idx", DUPLICATE_NAME_TODAY);
+        "restaurants_unique_name_address_idx", DUPLICATE_RESTAURANT_NAME_ADDRESS,
+        "dishes_unique_restaurant_name_created_idx", DUPLICATE_DISH_NAME_TODAY
+    );
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorInfo> handleError(HttpServletRequest req, NotFoundException e) {
