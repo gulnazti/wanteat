@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web;
+package org.gulnaz.wanteat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.List;
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.model.Restaurant;
 import org.gulnaz.wanteat.model.Vote;
+import org.gulnaz.wanteat.model.VoteCount;
 import org.gulnaz.wanteat.to.RestaurantTo;
 import org.gulnaz.wanteat.util.RestaurantUtil;
 
+import static org.gulnaz.wanteat.UserTestData.dev;
 import static org.gulnaz.wanteat.model.AbstractBaseEntity.START_SEQ;
-import static org.gulnaz.wanteat.web.UserTestData.admin;
-import static org.gulnaz.wanteat.web.UserTestData.dev;
 
 /**
  * @author gulnaz
@@ -58,7 +58,7 @@ public class RestaurantDishTestData {
         Restaurant copy3 = getRestaurantWithMenu(restaurant3, dish6, dish5);
         Restaurant copy4 = getRestaurantWithMenu(restaurant4, dish8, dish7);
         return RestaurantUtil.getTos(List.of(copy1, copy2, copy3, copy4),
-            List.of(vote2, new Vote(restaurant3, admin)));
+            List.of(createVoteCount(restaurant3.getId(), 2)));
     }
 
     public static Restaurant getRestaurantWithMenu(Restaurant restaurant, Dish... dishes) {
@@ -81,5 +81,19 @@ public class RestaurantDishTestData {
 
     public static Dish getUpdatedDish() {
         return new Dish(DISH1_ID, "Updated Name", 200);
+    }
+
+    public static VoteCount createVoteCount(Integer restautantId, Integer voteCount) {
+        return new VoteCount() {
+            @Override
+            public Integer getRestaurantId() {
+                return restautantId;
+            }
+
+            @Override
+            public Integer getTotalVotes() {
+                return voteCount;
+            }
+        };
     }
 }

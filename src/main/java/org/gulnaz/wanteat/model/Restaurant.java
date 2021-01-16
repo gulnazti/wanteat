@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 public class Restaurant extends AbstractNamedEntity {
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 100)
     @Column(name = "address", nullable = false)
     private String address;
 

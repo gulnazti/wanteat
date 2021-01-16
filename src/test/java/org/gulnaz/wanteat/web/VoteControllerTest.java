@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web.vote;
+package org.gulnaz.wanteat.web;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,24 +8,21 @@ import java.util.List;
 import org.gulnaz.wanteat.model.Vote;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.util.TimeUtil;
-import org.gulnaz.wanteat.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.RESTAURANT1_ID;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.VOTE_MATCHER;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.vote1;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.vote2;
-import static org.gulnaz.wanteat.web.TestUtil.userHttpBasic;
-import static org.gulnaz.wanteat.web.UserTestData.DEV_ID;
-import static org.gulnaz.wanteat.web.UserTestData.USER_ID;
-import static org.gulnaz.wanteat.web.UserTestData.dev;
-import static org.gulnaz.wanteat.web.UserTestData.user;
+import static org.gulnaz.wanteat.RestaurantDishTestData.RESTAURANT1_ID;
+import static org.gulnaz.wanteat.RestaurantDishTestData.VOTE_MATCHER;
+import static org.gulnaz.wanteat.RestaurantDishTestData.vote1;
+import static org.gulnaz.wanteat.RestaurantDishTestData.vote2;
+import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
+import static org.gulnaz.wanteat.UserTestData.DEV_ID;
+import static org.gulnaz.wanteat.UserTestData.USER_ID;
+import static org.gulnaz.wanteat.UserTestData.dev;
+import static org.gulnaz.wanteat.UserTestData.user;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,28 +70,6 @@ class VoteControllerTest extends AbstractControllerTest {
 
         Vote notUpdated = voteRepository.getByUserIdAndDate(DEV_ID, LocalDate.now());
         assertNotEquals(RESTAURANT1_ID, notUpdated.getRestaurant().getId());
-    }
-
-    @Test
-    void cancelVoteBeforeRestrictionTime() throws Exception {
-        fixClock(10);
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID + "/vote")
-            .with(userHttpBasic(dev)))
-            .andDo(print())
-            .andExpect(status().isNoContent());
-
-        assertNull(voteRepository.getByUserIdAndDate(DEV_ID, LocalDate.now()));
-    }
-
-    @Test
-    void cancelVoteAfterRestrictionTime() throws Exception {
-        fixClock(12);
-        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID + "/vote")
-            .with(userHttpBasic(dev)))
-            .andDo(print())
-            .andExpect(status().isConflict());
-
-        assertNotNull(voteRepository.getByUserIdAndDate(DEV_ID, LocalDate.now()));
     }
 
     @Test

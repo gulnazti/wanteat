@@ -1,11 +1,10 @@
-package org.gulnaz.wanteat.web.user;
+package org.gulnaz.wanteat.web;
 
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.service.UserService;
 import org.gulnaz.wanteat.to.UserTo;
 import org.gulnaz.wanteat.util.JsonUtil;
 import org.gulnaz.wanteat.util.UserUtil;
-import org.gulnaz.wanteat.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,14 +13,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.gulnaz.wanteat.TestUtil.readFromJson;
+import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
+import static org.gulnaz.wanteat.UserTestData.USER_ID;
+import static org.gulnaz.wanteat.UserTestData.USER_MATCHER;
+import static org.gulnaz.wanteat.UserTestData.admin;
+import static org.gulnaz.wanteat.UserTestData.dev;
+import static org.gulnaz.wanteat.UserTestData.user;
 import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_EMAIL;
-import static org.gulnaz.wanteat.web.TestUtil.readFromJson;
-import static org.gulnaz.wanteat.web.TestUtil.userHttpBasic;
-import static org.gulnaz.wanteat.web.UserTestData.USER_ID;
-import static org.gulnaz.wanteat.web.UserTestData.USER_MATCHER;
-import static org.gulnaz.wanteat.web.UserTestData.admin;
-import static org.gulnaz.wanteat.web.UserTestData.dev;
-import static org.gulnaz.wanteat.web.UserTestData.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

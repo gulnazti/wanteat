@@ -1,9 +1,8 @@
-package org.gulnaz.wanteat.web;
+package org.gulnaz.wanteat;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import org.gulnaz.wanteat.AuthorizedUser;
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.util.JsonUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

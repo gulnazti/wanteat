@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web;
+package org.gulnaz.wanteat;
 
 import org.gulnaz.wanteat.model.Role;
 import org.gulnaz.wanteat.model.User;

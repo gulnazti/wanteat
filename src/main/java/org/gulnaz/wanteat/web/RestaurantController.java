@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web.restaurant;
+package org.gulnaz.wanteat.web;
 
 import java.net.URI;
 import java.time.LocalDate;
@@ -7,13 +7,12 @@ import javax.validation.Valid;
 
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.model.Restaurant;
-import org.gulnaz.wanteat.model.Vote;
+import org.gulnaz.wanteat.model.VoteCount;
 import org.gulnaz.wanteat.repository.DishRepository;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.to.RestaurantTo;
 import org.gulnaz.wanteat.util.RestaurantUtil;
-import org.gulnaz.wanteat.web.RootController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
@@ -65,7 +64,7 @@ public class RestaurantController {
     public List<RestaurantTo> getAllWithMenu() {
         log.info("getAll restaurants with menu");
         List<Restaurant> restaurants = restaurantRepository.getAllWithMenu(LocalDate.now());
-        List<Vote> allTodayVotes = voteRepository.getAllVotesForToday(LocalDate.now());
+        List<VoteCount> allTodayVotes = voteRepository.countVotesForToday(LocalDate.now());
         return RestaurantUtil.getTos(restaurants, allTodayVotes);
     }
 

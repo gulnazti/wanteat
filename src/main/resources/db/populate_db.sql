@@ -32,7 +32,7 @@ VALUES ('Boeuf Bourguignon', 700, 1003),
        ('Tomatoes', 180, 1006),
        ('Cucumber Roll', 200, 1006);
 
-INSERT INTO votes (user_id, restaurant_id, date)
+INSERT INTO votes (user_id, restaurant_id, vote_date)
 VALUES (1000, 1003, DATE '2020-12-24'),
        (1001, 1005, DATE '2020-12-24');
 

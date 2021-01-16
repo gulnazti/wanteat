@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web.user;
+package org.gulnaz.wanteat.web;
 
 import java.util.List;
 import java.util.Set;
@@ -6,7 +6,6 @@ import java.util.Set;
 import org.gulnaz.wanteat.model.Role;
 import org.gulnaz.wanteat.model.User;
 import org.gulnaz.wanteat.service.UserService;
-import org.gulnaz.wanteat.web.RootController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -27,9 +27,6 @@ In purpose for testing you can use these commands:
 ###### vote
 <pre>curl -X POST "http://localhost:8080/wanteat/api/v1/restaurants/1003/vote" -H "accept: application/json" --user user@yandex.ru:password</pre>
 
-###### cancel vote
-<pre>curl -X DELETE "http://localhost:8080/wanteat/api/v1/restaurants/{id}/vote" -H "accept: application/json" --user user@yandex.ru:password</pre>
-
 ###### get votes history
 <pre>curl -X GET "http://localhost:8080/wanteat/api/v1/restaurants/votes-history" -H "accept: application/json" --user user@yandex.ru:password</pre>
 

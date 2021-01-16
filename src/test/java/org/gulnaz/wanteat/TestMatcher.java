@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web;
+package org.gulnaz.wanteat;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.gulnaz.wanteat.web.TestUtil.readListFromJsonMvcResult;
+import static org.gulnaz.wanteat.TestUtil.readListFromJsonMvcResult;
 
 /**
  * @author gulnaz

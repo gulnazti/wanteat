@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web.vote;
+package org.gulnaz.wanteat.web;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +11,6 @@ import org.gulnaz.wanteat.repository.RestaurantRepository;
 import org.gulnaz.wanteat.repository.UserRepository;
 import org.gulnaz.wanteat.repository.VoteRepository;
 import org.gulnaz.wanteat.util.exception.VoteException;
-import org.gulnaz.wanteat.web.RootController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.gulnaz.wanteat.util.TimeUtil.RESTRICTION_TIME;
 import static org.gulnaz.wanteat.util.TimeUtil.getCurrentTime;
-import static org.gulnaz.wanteat.util.exception.VoteException.CANCEL_NOT_ALLOWED;
 import static org.gulnaz.wanteat.util.exception.VoteException.VOTING_TIME_EXPIRED;
 
 /**
@@ -80,17 +78,5 @@ public class VoteController {
         int userId = authUser.getId();
         log.info("getVotesHistory for user {}", userId);
         return voteRepository.getAllVotesByUserId(userId);
-    }
-
-    @DeleteMapping("/{id}/vote")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancelVote(@AuthenticationPrincipal AuthorizedUser authUser) {
-        if (getCurrentTime().isBefore(RESTRICTION_TIME)) {
-            int userId = authUser.getId();
-            log.info("cancelVote for user {}", userId);
-            voteRepository.delete(userId, LocalDate.now());
-        } else {
-            throw new VoteException(CANCEL_NOT_ALLOWED);
-        }
     }
 }

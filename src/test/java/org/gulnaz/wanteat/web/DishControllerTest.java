@@ -1,9 +1,8 @@
-package org.gulnaz.wanteat.web.dish;
+package org.gulnaz.wanteat.web;
 
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.util.JsonUtil;
 import org.gulnaz.wanteat.util.exception.NotFoundException;
-import org.gulnaz.wanteat.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -11,17 +10,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.gulnaz.wanteat.RestaurantDishTestData.DISH1_ID;
+import static org.gulnaz.wanteat.RestaurantDishTestData.DISH_MATCHER;
+import static org.gulnaz.wanteat.RestaurantDishTestData.NOT_FOUND;
+import static org.gulnaz.wanteat.RestaurantDishTestData.dish1;
+import static org.gulnaz.wanteat.RestaurantDishTestData.dish2;
+import static org.gulnaz.wanteat.RestaurantDishTestData.dishes;
+import static org.gulnaz.wanteat.RestaurantDishTestData.getUpdatedDish;
+import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
+import static org.gulnaz.wanteat.UserTestData.admin;
+import static org.gulnaz.wanteat.UserTestData.user;
 import static org.gulnaz.wanteat.web.ExceptionInfoHandler.DUPLICATE_NAME_TODAY;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.DISH1_ID;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.DISH_MATCHER;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.NOT_FOUND;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.dish1;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.dish2;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.dishes;
-import static org.gulnaz.wanteat.web.RestaurantDishTestData.getUpdatedDish;
-import static org.gulnaz.wanteat.web.TestUtil.userHttpBasic;
-import static org.gulnaz.wanteat.web.UserTestData.admin;
-import static org.gulnaz.wanteat.web.UserTestData.user;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;

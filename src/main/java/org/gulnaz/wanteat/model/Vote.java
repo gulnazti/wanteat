@@ -24,9 +24,9 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     private User user;
 
-    @Column(name = "date", columnDefinition = "timestamp default current_date")
+    @Column(name = "vote_date", columnDefinition = "timestamp default current_date")
     @NotNull
-    private LocalDate date;
+    private LocalDate voteDate;
 
     public Vote() {
     }
@@ -39,19 +39,19 @@ public class Vote extends AbstractBaseEntity {
         this(id, restaurant, user, LocalDate.now());
     }
 
-    public Vote(Integer id, Restaurant restaurant, User user, LocalDate date) {
+    public Vote(Integer id, Restaurant restaurant, User user, LocalDate voteDate) {
         this.id = id;
         this.restaurant = restaurant;
         this.user = user;
-        this.date = date;
+        this.voteDate = voteDate;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getVoteDate() {
+        return voteDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setVoteDate(LocalDate voteDate) {
+        this.voteDate = voteDate;
     }
 
     public Restaurant getRestaurant() {
@@ -74,7 +74,7 @@ public class Vote extends AbstractBaseEntity {
     public String toString() {
         return "Vote{" +
                "id=" + id +
-               ", date=" + date +
+               ", voteDate=" + voteDate +
                ", restaurant=" + restaurant +
                '}';
     }

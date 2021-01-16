@@ -1,24 +1,23 @@
-package org.gulnaz.wanteat.web.user;
+package org.gulnaz.wanteat.web;
 
 import java.util.List;
 
 import org.gulnaz.wanteat.model.Role;
 import org.gulnaz.wanteat.service.UserService;
 import org.gulnaz.wanteat.util.exception.NotFoundException;
-import org.gulnaz.wanteat.web.AbstractControllerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.gulnaz.wanteat.web.TestUtil.userHttpBasic;
-import static org.gulnaz.wanteat.web.UserTestData.ADMIN_ID;
-import static org.gulnaz.wanteat.web.UserTestData.NOT_FOUND;
-import static org.gulnaz.wanteat.web.UserTestData.USER_ID;
-import static org.gulnaz.wanteat.web.UserTestData.USER_MATCHER;
-import static org.gulnaz.wanteat.web.UserTestData.admin;
-import static org.gulnaz.wanteat.web.UserTestData.dev;
-import static org.gulnaz.wanteat.web.UserTestData.user;
+import static org.gulnaz.wanteat.TestUtil.userHttpBasic;
+import static org.gulnaz.wanteat.UserTestData.ADMIN_ID;
+import static org.gulnaz.wanteat.UserTestData.NOT_FOUND;
+import static org.gulnaz.wanteat.UserTestData.USER_ID;
+import static org.gulnaz.wanteat.UserTestData.USER_MATCHER;
+import static org.gulnaz.wanteat.UserTestData.admin;
+import static org.gulnaz.wanteat.UserTestData.dev;
+import static org.gulnaz.wanteat.UserTestData.user;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;

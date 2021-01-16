@@ -19,13 +19,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class Dish extends AbstractNamedEntity {
 
     @NotNull
-    @Range(min = 1, max = 100000)
+    @Range(min = 1, max = 10000000)
     @Column(name = "price", nullable = false)
     private long price;
 
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "created", nullable = false, columnDefinition = "timestamp default current_date")
+    @Column(name = "created", nullable = false, columnDefinition = "date default current_date")
     private LocalDate created;
 
     @ManyToOne(fetch = FetchType.LAZY)

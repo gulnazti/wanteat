@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.model.Restaurant;
-import org.gulnaz.wanteat.model.Vote;
+import org.gulnaz.wanteat.model.VoteCount;
 import org.gulnaz.wanteat.to.DishTo;
 import org.gulnaz.wanteat.to.RestaurantTo;
 
@@ -20,9 +20,9 @@ public class RestaurantUtil {
     private RestaurantUtil() {
     }
 
-    public static List<RestaurantTo> getTos(List<Restaurant> restaurants, List<Vote> allTodayVotes) {
+    public static List<RestaurantTo> getTos(List<Restaurant> restaurants, List<VoteCount> allTodayVotes) {
         Map<Integer, Integer> results = new HashMap<>();
-        allTodayVotes.forEach(vote -> results.merge(vote.getRestaurant().getId(), 1, Integer::sum));
+        allTodayVotes.forEach(voteCount -> results.put(voteCount.getRestaurantId(), voteCount.getTotalVotes()));
         return restaurants.stream()
             .map(restaurant -> createRestaurantTo(restaurant, results.getOrDefault(restaurant.getId(), 0)))
             .sorted(Comparator.comparing(RestaurantTo::getTodayVotes).reversed()

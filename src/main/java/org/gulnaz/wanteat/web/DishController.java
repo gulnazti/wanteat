@@ -1,4 +1,4 @@
-package org.gulnaz.wanteat.web.dish;
+package org.gulnaz.wanteat.web;
 
 import java.util.List;
 import javax.validation.Valid;
@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import org.gulnaz.wanteat.model.Dish;
 import org.gulnaz.wanteat.repository.DishRepository;
 import org.gulnaz.wanteat.repository.RestaurantRepository;
-import org.gulnaz.wanteat.web.RootController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
