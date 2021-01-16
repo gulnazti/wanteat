@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.gulnaz.wanteat.util.TimeUtil.RESTRICTION_TIME;
 import static org.gulnaz.wanteat.util.TimeUtil.getCurrentTime;
-import static org.gulnaz.wanteat.util.exception.VoteException.VOTING_TIME_EXPIRED;
+import static org.gulnaz.wanteat.util.exception.VoteException.CHANGE_VOTE_TIME_EXPIRED;
 
 /**
  * @author gulnaz
@@ -54,10 +54,10 @@ public class VoteController {
         throws VoteException {
         int userId = authUser.getId();
         Vote vote = voteRepository.getByUserIdAndDate(userId, LocalDate.now());
-        boolean allowed = getCurrentTime().isBefore(RESTRICTION_TIME);
+        boolean changeAllowed = getCurrentTime().isBefore(RESTRICTION_TIME);
 
-        if (vote != null && !allowed) {
-            throw new VoteException(VOTING_TIME_EXPIRED);
+        if (vote != null && !changeAllowed) {
+            throw new VoteException(CHANGE_VOTE_TIME_EXPIRED);
         }
 
         Restaurant restaurant = restaurantRepository.getOne(restaurantId);
