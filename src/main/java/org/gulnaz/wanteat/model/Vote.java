@@ -24,7 +24,7 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     private User user;
 
-    @Column(name = "vote_date", columnDefinition = "timestamp default current_date")
+    @Column(name = "vote_date", columnDefinition = "date default current_date")
     @NotNull
     private LocalDate voteDate;
 
